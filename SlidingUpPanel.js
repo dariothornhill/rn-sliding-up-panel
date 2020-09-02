@@ -79,7 +79,7 @@ class SlidingUpPanel extends React.PureComponent {
     showBackdrop: true,
     backdropOpacity: 0.75,
     friction: Constants.DEFAULT_FRICTION,
-    onBottomReached: () => null,
+    onBottomReached: () => null
   }
 
   // eslint-disable-next-line react/sort-comp
@@ -132,7 +132,7 @@ class SlidingUpPanel extends React.PureComponent {
     this._backdropPointerEvents = this._isAtBottom(initialValue) ? 'none' : 'box-only' // prettier-ignore
     this._flick = new FlickAnimation({max: top, min: bottom})
 
-    this._flickAnimationListener = this._flick.onUpdate(value => {
+    this._flickAnimationListener = this._flick.onUpdate((value) => {
       this.props.animatedValue.setValue(value)
     })
 
@@ -314,10 +314,18 @@ class SlidingUpPanel extends React.PureComponent {
 
     const node = TextInput.State.currentlyFocusedField()
 
+    const node = TextInput.State.currentlyFocusedInput
+      ? findNodeHandler(TextInput.State.currentlyFocusedInput())
+      : TextInput.State.currentlyFocusedField();
+
     if (node != null) {
-      UIManager.viewIsDescendantOf(node, findNodeHandle(this._content), (isDescendant) => {
-        isDescendant && this.scrollIntoView(node)
-      });
+      UIManager.viewIsDescendantOf(
+        node,
+        findNodeHandle(this._content),
+        (isDescendant) => {
+          isDescendant && this.scrollIntoView(node)
+        }
+      )
     }
   }
 
@@ -404,7 +412,7 @@ class SlidingUpPanel extends React.PureComponent {
       <Animated.View
         key="backdrop"
         pointerEvents={this._backdropPointerEvents}
-        ref={c => (this._backdrop = c)}
+        ref={(c) => (this._backdrop = c)}
         onTouchStart={() => this._flick.stop()}
         onTouchEnd={() => this.hide()}
         style={[styles.backdrop, backdropStyle, {opacity: backdropOpacity}]}
@@ -439,7 +447,7 @@ class SlidingUpPanel extends React.PureComponent {
         <Animated.View
           key="content"
           pointerEvents="box-none"
-          ref={c => (this._content = c)}
+          ref={(c) => (this._content = c)}
           style={animatedContainerStyles}>
           {this.props.children(this._panResponder.panHandlers)}
         </Animated.View>
@@ -450,7 +458,7 @@ class SlidingUpPanel extends React.PureComponent {
       <Animated.View
         key="content"
         pointerEvents="box-none"
-        ref={c => (this._content = c)}
+        ref={(c) => (this._content = c)}
         style={animatedContainerStyles}
         {...this._panResponder.panHandlers}>
         {this.props.children}
